@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static custom_tags %}
+{% block content %}
+
+<style>
+.picture-circle, .picture-circle--medium, .picture-circle--small {
+  border-radius: 100%;
+  width: 150px;
+  height: 150px; }
+  .picture-circle--medium {
+    width: 36px;
+    height: 36px; }
+  .picture-circle--small {
+    width: 30px;
+    height: 30px; }
+
+.picture-square {
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-color: #fff;
+  cursor: pointer; }
+  .picture-square > a {
+    cursor: pointer; }
+  .picture-square:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%; }
+  .picture-square .content {
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); }
+  .picture-square:hover .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff; }
+    .picture-square:hover .content .fa {
+      color: #fff;
+      margin-right: 5px; }
+      .picture-square:hover .content .fa:not(:first-of-type) {
+        margin-left: 25px; }
+        .profile__body > .row > .col-xs-4 {
+    padding: 13px; }
+</style>
+<div class="profile">
+  <div class="profile__head">
+    <div class="row">
+      <div class="col-xs-4 left">
+        {% if profile.profile_path %}
+          <img class="picture-circle" src="{{ profile.profile_path.url }}">
+        {% else %}
+          <img class="picture-circle" src="{% static 'images/profile_placeholder.jpg' %}">
+        {% endif %}
+      </div>
+      <div class="col-xs-8 right">
+        <div class="name-buttons">
+          <h1 class="username">{{ user.username }}</h1>
+          {% if request.user == user %}
+            <a class="edit-desktop" href="{% url 'profile_settings' user.username %}">
+              <button class="edit-profile">Edit Profile</button>
+            </a>
+            <div class="options-bubbles" type="button" data-toggle="modal" data-target="#logoutModal">
+              <p class="bubble"></p>
+              <p class="bubble"></p>
+              <p class="bubble"></p>
+            </div>
+          {% elif request.user.is_authenticated %}
+          <div class="follow-toggle__container">
+            {% is_following request.user.profile profile as following %}
+            <button class="btn btn-primary {% if not following %}follow-user{% else %}unfollow-user{% endif %}" id="{{ profile.pk }}">
+              {% if not following %}
+                Follow
+              {% else %}
+                Following
+              {% endif %}
+            </button>
+          </div>
+          {% endif %}
+          <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <ul>
+                  <li><a type="button" class="btn" href="">Change Password</a></li>
+                  <li><a type="button" class="btn" href="{% url 'signout' %}">Logout</a></li>
+                  <li><a type="button" class="btn" data-dismiss="modal">Cancel</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if request.user == user %}
+          <a class="edit-mobile" href="{% url 'profile'%}">
+            <button class="edit-profile">Edit Profile</button>
+          </a>
+        {% endif %}
+        <div class="desktop-block">
+          <ul class="stats">
+              <li class="stats__count"><span>{{ profile.image_set.count }}</span> Posts</li>
+              <a href="{% url 'followers' username=profile.user.username %}"><li class="stats__count"><span>{{ profile.get_number_of_followers }}</span> Followers</li></a>
+              <a href="{% url 'following' username=profile.user.username %}"><li class="stats__count"><span>{{ profile.get_number_of_following }}</span> Following</li></a>
+          </ul>
+          <div class="description">
+            <p>{% if profile.bio %}{{ profile.bio }}{% endif %}</p>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-block">
+        <div class="description">
+          <p>{% if profile.bio %}{{ profile.bio }}{% endif %}</p>
+        </div>
+        <ul class="stats">
+            <div class="col-xs-4"><li class="stats__count"><span>{{ profile.image_set.count }}</span><br> posts</li></div>
+            <div class="col-xs-4"><a href="{% url 'followers' username=profile.user.username %}"><li class="stats__count"><span>{{ profile.get_number_of_followers }}</span><br> followers</li></a></div>
+            <div class="col-xs-4"><a href="{% url 'following' username=profile.user.username %}"><li class="stats__count"><span>{{ profile.get_number_of_following }}</span><br> following</li></a></div>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% for post in profile.image_set.all %}
+  <div class="col-xs-4">
+    <div class="picture-square" style="background-image: url({{ post.image.url }})">
+      <a href="{% url 'post' post.pk %}">
+        <div class="content">{{ post.image.url }}
+          <i class="fa fa-heart" aria-hidden="true"></i> {{ post.get_number_of_likes }}
+  <i class="fa fa-comment" aria-hidden="true"></i> {{ post.get_number_of_comments }}
+  {{ post.image.url }}
+        </div>
+      </a>
+    </div>
+  </div>
+{% endfor %}
+  <div class="profile__body">
+    <div class="row">
+      {% for post in profile.image_set.all %}
+        <div class="col-xs-4">
+          <div class="picture-square" style="background-image: url({{ post.image.url }})">
+            <a href="{% url 'post' post.pk %}">
+              <div class="content">{{ post.image.url }}
+                <i class="fa fa-heart" aria-hidden="true"></i> {{ post.get_number_of_likes }}
+				<i class="fa fa-comment" aria-hidden="true"></i> {{ post.get_number_of_comments }}
+				{{ post.image.url }}
+              </div>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
