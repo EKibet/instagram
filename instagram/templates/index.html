@@ -1,1 +1,31 @@
-hola
+{% block content %}
+{% for post in posts %}
+    <article class="media content-section">
+            <div class="d-flex justify-content-center h-100">
+              <div class="image_outer_container">
+                <div class="green_icon"></div>
+                <div class="image_inner_container">
+                  <img src="{{ post.author.profile.profile_path.url }}">
+                  
+                </div>
+              </div>
+            </div>
+      <!-- <img class="rounded-circle article-img" style="
+        height: 125px;
+        width: 125px;
+        margin-right: 20px;
+        margin-bottom: 16px;
+      " src="{{ post.author.profile.profile_photo.url }}"> -->
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="#">{{ post.author }}</a>
+          <small class="text-muted">{{ post.time_created|date:"F d, Y" }}</small>
+        </div>
+        <img src="{{post.image.url}}" alt="">
+        <p class="article-content">{{ post.caption }}</p>
+      </div>
+    </article>
+    
+{% endfor %}
+{% endblock content %}
+
