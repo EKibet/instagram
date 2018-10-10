@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from user.models import Profile
 from django.test import TestCase
 from .models import Image
-class MyGalery_TestCases(TestCase):
+class Intagram_TestCases(TestCase):
     def setUp(self):
         self.user1= User(id=1,username='Edgar',email='kipyego@gmail.com',password='admin.py')
         self.user1.save()
