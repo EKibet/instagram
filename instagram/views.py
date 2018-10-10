@@ -22,7 +22,7 @@ def home(request):
     
     return render(request, 'index.html', locals())
 
-class PostListView(ListView):
+class PostListView(LoginRequiredMixin,ListView):
     model=Image
     template_name= 'instagram/image_list.html' # <app>/<model>_<view_type>.html
     
@@ -36,7 +36,7 @@ def follow(request,user_id):
     context = { 'ajax_output': ajax_output()}
     return render(request,'instagram/profile.html',context)
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin,CreateView):
     form_class = PhotoUploadModelForm
     template_name = 'instagram/image_upload.html'
  
@@ -74,32 +74,26 @@ def add_comment(request,post_id):
             comment.save()
     return redirect('home')
 
-@ajax_request
 
-def add_like(request):
-    post_pk = request.POST.get('post_pk')
-    post = Image.objects.get(pk=post_pk)
-    try:
-        like = Like(post=post, user=request.user)
-        like.save()
-        result = 1
-    except Exception as e:
-        like = Like.objects.get(post=post, user=request.user)
-        like.delete()
-        result = 0
+@login_required(login_url='/accounts/login/')
+def search_results(request):
+    if 'searchItem' in request.GET and request.GET["searchItem"]:
+        search_term = request.GET.get("searchItem")
+        searched_user = Profile.search_by_username(search_term)
+        # user = User.objects.get(username=searched_user)
+        # user_images = Profile.objects.get(user=searched_user)
+        message = f"{search_term}"
+        context = {
+            'message': message,
+            'searched_user': searched_user
+        }
+        return render(request, 'search.html', context)
 
-    return {
-        'result': result,
-        'post_pk': post_pk
-    }
+    else:
+        message = "You haven't searched for any term"
+        return render(request, 'index.html',{"message":message})
 
-
-
-
-
-
-
-
+@login_required(login_url='/accounts/login/')
 def profile(request, username):
     user = User.objects.get(username=username)
     if not user:
@@ -114,7 +108,7 @@ def profile(request, username):
     print(profile.user.username)
     print(profile.image)
     return render(request, 'instagram/profile.html', context)
-
+@login_required(login_url='/accounts/login/')
 def post(request, pk):
     post = Image.objects.get(pk=pk)
     try:
@@ -157,7 +151,7 @@ def followers(request, username):
 
     return render(request, 'instagram/follow_list.html', context)
 
-
+@login_required(login_url='/accounts/login/')
 def following(request, username):
     user = User.objects.get(username=username)
     user_profile = Profile.objects.get(user=user)
@@ -168,7 +162,7 @@ def following(request, username):
         'profiles': profiles
     }
     return render(request, 'instagram/follow_list.html', context)
-
+@login_required(login_url='/accounts/login/')
 def profile_settings(request, username):
     user = User.objects.get(username=username)
     if request.user != user:
