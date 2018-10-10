@@ -34,7 +34,6 @@ def register(request):
                         mail_subject, message, to=[to_email]
             )
             email.send()
-            messages.success(request, f'Account created for {username}!')
             return redirect('login')
     else:
         form = UserRegisterForm()
@@ -54,7 +53,8 @@ def activate(request, uidb64, token):
         messages.success(request, f'Thank you for your email confirmation. Now you can login your account.!')
         return redirect('login')
     else:
-        return HttpResponse('Activation link is invalid!')
+        messages.success(request, f'Activation link is invalid!')
+        return redirect('login')
 
 @login_required
 def profile(request):
