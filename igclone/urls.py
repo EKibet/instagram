@@ -19,7 +19,7 @@ from user import views as user_views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from user import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^instagram/',include('instagram.urls')),
@@ -27,8 +27,8 @@ urlpatterns = [
     url(r'^login/$', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     url(r'profile/$', user_views.profile, name='profile'),
     url(r'^friendship/', include('friendship.urls')),
-
-
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+            views.activate, name='activate'),
 ]
 if settings.DEBUG:
     urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
