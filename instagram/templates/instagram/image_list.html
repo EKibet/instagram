@@ -10,6 +10,8 @@
                 <div class="card view-update {{ post.pk }}">
                     <div class="card__panel-head">
                         <div class="poster__info">
+                            <a href="/instagram/prof/{{post.user_profile.user.username}}" style="text-decoration:none; font-size: 16px; display:inline-block" class="user">
+
                                 <img class="poster__profilepic" src="{{ post.user_profile.profile_path.url }}">
                               {{ post.author.username }}
                             </a>
@@ -22,9 +24,8 @@
                         </span>
                         <a href="#">
                           <div class="likes">
-                            {% if post.get_number_of_likes %}
-                                {{ post.get_number_of_likes }} like{% if post.get_number_of_likes > 1 %}s{% endif %}
-                            {% endif %}
+                              <span class="comment"><a class="fa fa-heart" style="color:red; font-size: 20px;" href="#"></a>
+                              </span>
                           </div>
                         </a>
                         <ul class="comment-list">
@@ -33,6 +34,7 @@
                               {{ post.user_profile.user.username }}
                             </a>
                             <span class="comment">{{ post.title }}</span>
+
                           </li>
                           <a class="view-more"></a>
                           {% for comment in post.comment_set.all %}
