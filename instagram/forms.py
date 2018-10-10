@@ -6,7 +6,7 @@ class PhotoUploadModelForm(forms.ModelForm):
 
     class Meta:
         model = Image
-        fields = ['image', 'title']
+        fields = [ 'title','image','caption']
 class CommentForm(forms.ModelForm):
 
     class Meta:
