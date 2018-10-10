@@ -17,8 +17,25 @@ class Image(models.Model):
 
     def get_absolute_url(self):
         return reverse('home')
+    def save_image(self):
+        self.save()
+
+    @classmethod
+    def retrieve_all(cls):
+        all_objects = Image.objects.all()
+        for item in all_objects:
+            return item;
+
+    @classmethod
+    def get_image_by_id(cls,incoming_id):
+        image_result = cls.objects.get(id=incoming_id)
+        return image_result
 
 
+    @classmethod
+    def update_image(cls,current_value,new_value):
+        fetched_object = Image.objects.filter(author=current_value).update(author=new_value)
+        return fetched_object
 class Comment(models.Model):
     post = models.ForeignKey('Image', null=True)
     user = models.ForeignKey(User)

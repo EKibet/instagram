@@ -26,6 +26,8 @@ As a user of the application you will be able to:
 
 ### Installing
 
+*** To view the app.Visit -> [instagramlite](http://instagramlite.herokuapp.com/instagram/)
+
 1. Clone this repo: git clone https://github.com/EKibet/instagram.git.
 2. The repo comes in a zipped or compressed format. Extract to your prefered location and open it.
 3. open your terminal and navigate to gallery then create a virtual environment.For detailed guide refer  [here](https://packaging.python.org/guides/installing-using-pip-and-virtualenv/)
