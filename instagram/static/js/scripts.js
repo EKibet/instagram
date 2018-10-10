@@ -17,7 +17,15 @@ function create_like(success_cb, error_cb) {
   function error_cb(error) {
     console.log(error);
   }
-  
+  $(document).ready(function() {
+    $(window).on('scroll', function() {
+      if (Math.round($(window).scrollTop()) > 100) {
+        $('.navbar').addClass('scrolled');
+      } else {
+        $('.navbar').removeClass('scrolled');
+      }
+    });
+  });
   
   function like_update_view(data) {
     console.log(data);
