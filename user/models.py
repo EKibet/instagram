@@ -30,3 +30,8 @@ class Profile(models.Model):
     def image(self):
         if self.profile_path and hasattr(self.profile_path, 'url'):
             return self.profile_path.url
+
+    @classmethod
+    def search_by_username(cls,search_term):
+        search_result = cls.objects.filter(user__username__icontains=search_term)
+        return search_result
